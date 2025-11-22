@@ -5,6 +5,7 @@ import { Order } from './orders/order.entity';
 import { OrderItem } from './orders/order-item.entity';
 import { Product } from './products/product.entity';
 import { AuthModule } from './auth/auth.module';
+import { RestaurantsModule } from './restaurants/restaurants.module';
 
 @Module({
   imports: [
@@ -19,6 +20,8 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
     }),
     AuthModule,
+    RestaurantsModule,
   ],
+  providers: [],
 })
 export class AppModule { }
