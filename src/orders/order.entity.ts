@@ -1,26 +1,33 @@
-import {Entity, PrimaryGeneratedColumn, Column,OneToMany,ManyToOne,CreateDateColumn} from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
 import { User } from '../users/user.entity';
 import { OrderItem } from './order-item.entity';
 
 @Entity()
-export class Order{
-    @PrimaryGeneratedColumn('uuid')
-    id:string;
+export class Order {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column('decimal', { precision: 10, scale: 2 }) // Money handling
-    total_amount: number;
+  @Column('decimal', { precision: 10, scale: 2 }) // Money handling
+  total_amount: number;
 
-    @Column({ default: 'pending' })
-    status: string;
+  @Column({ default: 'pending' })
+  status: string;
 
-    // RELATION: Many Orders belong to One User
-    @ManyToOne(() => User, (user) => user.orders)
-    user: User;
+  // RELATION: Many Orders belong to One User
+  @ManyToOne(() => User, (user) => user.orders)
+  user: User;
 
-    // RELATION: One Order has Many Items
-    @OneToMany(() => OrderItem, (item) => item.order)
-    items: OrderItem[];
+  // RELATION: One Order has Many Items
+  @OneToMany(() => OrderItem, (item) => item.order)
+  items: OrderItem[];
 
-    @CreateDateColumn()
-    created_at: Date;
+  @CreateDateColumn()
+  created_at: Date;
 }

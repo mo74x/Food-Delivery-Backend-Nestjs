@@ -3,14 +3,14 @@ import { Order } from './order.entity';
 import { Product } from '../products/product.entity';
 
 @Entity()
-export class OrderItem{
-   @PrimaryGeneratedColumn('uuid')
+export class OrderItem {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('int')
   quantity: number;
 
-  @Column('decimal', { precision: 10, scale: 2 }) 
+  @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
   // RELATION: Deleting an Order should delete its items (Cascade)

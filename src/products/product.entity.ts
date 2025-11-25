@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
 import { OrderItem } from '../orders/order-item.entity';
+import { Restaurant } from '../restaurants/restaurant.entity';
 
 @Entity()
 export class Product {
@@ -21,5 +28,7 @@ export class Product {
   // Inverse relation for TypeORM to understand the link
   @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
   orderItems: OrderItem[];
-  
+
+  @ManyToOne(() => Restaurant, (restaurant) => restaurant.products)
+  restaurant: Restaurant;
 }

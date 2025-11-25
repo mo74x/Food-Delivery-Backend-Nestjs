@@ -3,16 +3,16 @@ import { Reflector } from '@nestjs/core';
 import { UserRole } from '../users/user.entity';
 import { ROLES_KEY } from './roles.decorator';
 
-//The Bouncer 
+//The Bouncer
 @Injectable()
-export class RolesGuard implements CanActivate{
-    constructor(private reflector: Reflector) {}
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
 
-   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
     if (!requiredRoles) {
       return true;
     }
@@ -20,5 +20,5 @@ export class RolesGuard implements CanActivate{
 
     //check if the user has the required role
     return requiredRoles.some((role) => user.role?.includes(role));
-}
+  }
 }
