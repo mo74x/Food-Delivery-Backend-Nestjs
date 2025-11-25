@@ -14,6 +14,7 @@ export class ProductsController {
 
     @Post()
     @UseGuards(AuthGuard('jwt'), RolesGuard)
+    //using updates
     @Roles(UserRole.ADMIN)
     async createProduct(
         @Body() createProductDto: CreateProductDto,
