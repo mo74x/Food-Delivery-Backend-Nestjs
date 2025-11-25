@@ -7,9 +7,15 @@ services:
       POSTGRES_PASSWORD: complex_password
       POSTGRES_DB: food_delivery
     ports:
-      - "5433:5432"
+      - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: food_delivery_redis
+    ports:
+      - '6379:6379'
 
 volumes:
   postgres_data:

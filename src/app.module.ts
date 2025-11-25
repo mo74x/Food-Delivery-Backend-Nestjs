@@ -9,6 +9,9 @@ import { AuthModule } from './auth/auth.module';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -22,6 +25,24 @@ import { OrdersModule } from './orders/orders.module';
       entities: [User, Order, OrderItem, Product, Restaurant,],
       synchronize: true,
     }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async () => ({
+        store: await redisStore({
+          socket: {
+            host: 'localhost',
+            port: 6379,
+          },
+        }),
+
+      }),
+    }),
+    BullModule.forRoot({
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
     AuthModule,
     RestaurantsModule,
     ProductsModule,
@@ -29,4 +50,4 @@ import { OrdersModule } from './orders/orders.module';
   ],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

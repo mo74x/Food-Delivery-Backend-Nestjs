@@ -5,13 +5,17 @@ import {
   OneToMany,
   ManyToOne,
   CreateDateColumn,
+  Index
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { OrderItem } from './order-item.entity';
 import { Restaurant } from '../restaurants/restaurant.entity';
 
 @Entity()
+@Index(['restaurant', 'status'])
+@Index(['user', 'created_at'])
 export class Order {
+   
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
