@@ -7,6 +7,7 @@ import { Product } from './products/product.entity';
 import { Restaurant } from './restaurants/restaurant.entity';
 import { AuthModule } from './auth/auth.module';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
     }),
     AuthModule,
     RestaurantsModule,
+    ProductsModule,
   ],
   providers: [],
 })
