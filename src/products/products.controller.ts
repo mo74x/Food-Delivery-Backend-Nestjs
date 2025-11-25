@@ -13,7 +13,7 @@ export class ProductsController {
     constructor(private productsService: ProductsService) { }
 
     @Post()
-    @UseGuards(AuthGuard(), RolesGuard)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Roles(UserRole.ADMIN)
     async createProduct(
         @Body() createProductDto: CreateProductDto,
