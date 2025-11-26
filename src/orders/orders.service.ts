@@ -8,12 +8,14 @@ import { Product } from '../products/product.entity';
 import { Restaurant } from '../restaurants/restaurant.entity';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
+import { OrdersGateway } from './orders.gateway';
 
 @Injectable()
 export class OrdersService {
   constructor(
     private dataSource: DataSource,
-    @InjectQueue('notifications-queue') private notificationQueue: Queue) { }
+    @InjectQueue('notifications-queue') private notificationQueue: Queue,
+    private ordersGateway: OrdersGateway) { }
 
   async createOrder(createOrderDto: CreateOrderDto, user: User): Promise<Order> {
     const { restaurantId, items } = createOrderDto;
@@ -64,6 +66,11 @@ export class OrdersService {
         totalAmount += product.price * itemDto.quantity;
         orderItems.push(orderItem);
       }
+      this.ordersGateway.notifyRestaurant(restaurantId, {
+        message: 'New Order Received!',
+        orderId: savedOrder.id,
+        total: savedOrder.total_amount
+      });
 
       // D. Save all items
       await queryRunner.manager.save(OrderItem, orderItems);
@@ -93,5 +100,6 @@ export class OrdersService {
       // Always release the connection back to the pool
       await queryRunner.release();
     }
+    
   }
 }

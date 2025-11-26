@@ -67,4 +67,21 @@ export class ProductsService {
 
         return products;
     }
+
+  
+
+    async searchProducts(query: string): Promise<Product[]> {
+        return this.productRepository.createQueryBuilder('product')
+            .leftJoinAndSelect('product.restaurant', 'restaurant') // We want to know which restaurant
+
+            // to_tsvector: Converts DB text to searchable tokens
+          
+            .where("to_tsvector('english', product.name || ' ' || product.description) @@ plainto_tsquery('english', :query)", { query })
+
+            // 3. Ranking (Optional but Pro)
+            // Order results by how well they match (e.g., exact match is higher than partial)
+            .orderBy("ts_rank(to_tsvector('english', product.name || ' ' || product.description), plainto_tsquery('english', :query))", "DESC")
+
+            .getMany();
+    }
 }
