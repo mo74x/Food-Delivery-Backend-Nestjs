@@ -83,22 +83,47 @@ This will start:
 
 ### 4. Environment Configuration
 
-The application uses the following default configuration (hardcoded in `app.module.ts`):
+The application now uses environment variables for configuration. A `.env` file has been created with default development values.
 
-**Database:**
+**Configuration File:** `.env`
 
-- Host: `localhost`
-- Port: `5433`
-- Username: `admin`
-- Password: `complex_password`
-- Database: `food_delivery`
+```bash
+# Application
+NODE_ENV=development
+PORT=3000
 
-**Redis:**
+# Database Configuration
+DB_TYPE=postgres
+DB_HOST=localhost
+DB_PORT=5433
+DB_USERNAME=admin
+DB_PASSWORD=complex_password
+DB_DATABASE=food_delivery
+DB_SYNCHRONIZE=true
 
-- Host: `localhost`
-- Port: `6379`
+# Redis Configuration
+REDIS_HOST=localhost
+REDIS_PORT=6379
 
-> **Note:** For production, it's recommended to use environment variables for configuration.
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRATION=1h
+
+# CORS Configuration (comma-separated origins)
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+
+# API Configuration
+API_PREFIX=api
+SWAGGER_ENABLED=true
+```
+
+**Important Notes:**
+
+- The `.env` file is already created with default values
+- Never commit `.env` to version control (it's in `.gitignore`)
+- For production, see `PRODUCTION.md` for deployment guidelines
+- Change `JWT_SECRET` to a strong random value in production
+- Set `DB_SYNCHRONIZE=false` in production and use migrations
 
 ### 5. Run the application
 
@@ -122,6 +147,22 @@ npm run start:debug
 ```
 
 The API will be available at `http://localhost:3000`
+
+## 📖 Swagger API Documentation
+
+This project includes interactive Swagger/OpenAPI documentation. When the application is running in development mode, you can access it at:
+
+**Swagger UI:** `http://localhost:3000/api`
+
+The Swagger interface allows you to:
+
+- View all available endpoints
+- See request/response schemas
+- Test API endpoints directly from the browser
+- View authentication requirements
+- See example payloads
+
+> **Note:** Swagger is enabled by default in development but disabled in production for security. You can control this with the `SWAGGER_ENABLED` environment variable.
 
 ## 📚 API Documentation
 
@@ -387,16 +428,25 @@ The application uses BullMQ for processing orders asynchronously. When an order 
 
 ## 🚀 Production Considerations
 
-Before deploying to production:
+✅ **Completed:**
 
-1. **Environment Variables:** Move all configuration to environment variables
-2. **Database Migration:** Use TypeORM migrations instead of `synchronize: true`
-3. **Security:** Add helmet, rate limiting, and CORS configuration
+1. ✅ **Environment Variables:** All configuration now uses environment variables (`.env`)
+2. ✅ **Swagger Documentation:** Swagger/OpenAPI documentation is implemented
+3. ✅ **Validation:** Global validation pipes are configured
+4. ✅ **CORS:** CORS is configured with environment-based origins
+
+📋 **Before deploying to production:**
+
+1. **Review `PRODUCTION.md`**: Comprehensive deployment guide included
+2. **Database Migrations:** Use TypeORM migrations instead of `synchronize: true`
+3. **Security Enhancements:** Add helmet and rate limiting (see `PRODUCTION.md`)
 4. **Logging:** Implement proper logging (Winston, Pino)
-5. **Monitoring:** Add health checks and monitoring (Prometheus, DataDog)
-6. **Documentation:** Consider adding Swagger/OpenAPI documentation
-7. **SSL/TLS:** Enable HTTPS
-8. **Secrets Management:** Use proper secrets management (AWS Secrets Manager, HashiCorp Vault)
+5. **Monitoring:** Add health checks and APM (Prometheus, DataDog, New Relic)
+6. **SSL/TLS:** Enable HTTPS in production
+7. **Secrets Management:** Use secure secrets management
+8. **Disable Swagger:** Set `SWAGGER_ENABLED=false` in production
+
+📖 **See [PRODUCTION.md](./PRODUCTION.md) for detailed deployment instructions and best practices.**
 
 ## 🤝 Contributing
 

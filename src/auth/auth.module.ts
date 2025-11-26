@@ -3,23 +3,33 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secret: 'YOUR_SECRET_KEY_HERE', // In production, use env vars!
-      signOptions: {
-        expiresIn: 3600, // Token expires in 1 hour
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService): JwtModuleOptions => {
+        const secret = configService.get<string>('jwt.secret')!;
+        const expiresIn = configService.get<string>('jwt.expiresIn')!;
+        return {
+          secret,
+          signOptions: {
+            expiresIn,
+          },
+        } as JwtModuleOptions;
       },
+      inject: [ConfigService],
     }),
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
   exports: [PassportModule, AuthService, JwtStrategy],
 })
-export class AuthModule {}
+export class AuthModule { }
+
