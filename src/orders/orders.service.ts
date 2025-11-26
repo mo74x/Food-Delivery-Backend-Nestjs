@@ -67,11 +67,9 @@ export class OrdersService {
         orderId: savedOrder.id,
         total: savedOrder.total_amount
       });
-
-      // D. Save all items
       await queryRunner.manager.save(OrderItem, orderItems);
 
-      // E. Update the total amount on the order
+
       savedOrder.total_amount = totalAmount;
       await queryRunner.manager.save(Order, savedOrder);
 
