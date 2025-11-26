@@ -28,26 +28,22 @@ export class OrdersService {
     try {
       // ----------------- TRANSACTION STARTS HERE -----------------
 
-      // A. Verify Restaurant exists
       const restaurant = await queryRunner.manager.findOne(Restaurant, {
         where: { id: restaurantId }
       });
       if (!restaurant) throw new NotFoundException('Restaurant not found');
 
-      // B. Create the Order Entry (Initial status: Pending)
       const order = new Order();
       order.user = user;
       order.restaurant = restaurant;
       order.status = 'pending';
       order.total_amount = 0; // We calculate this below
 
-      // Save order first to generate an ID
       const savedOrder = await queryRunner.manager.save(order);
 
       let totalAmount = 0;
       const orderItems: OrderItem[] = [];
 
-      // C. Process each item (Check price, calculate total, create OrderItem)
       for (const itemDto of items) {
         const product = await queryRunner.manager.findOne(Product, {
           where: { id: itemDto.productId, restaurant: { id: restaurantId } }
